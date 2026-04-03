@@ -112,7 +112,7 @@
   <br>
 
   <button onclick="startTimer()">시작</button>
-  <button onclick="pauseTimer()">일시정지</button>
+  <button id="pauseBtn" onclick="pauseTimer()">일시정지</button>
   <button onclick="resetTimer()">초기화</button>
 
   <canvas id="clockCanvas" width="300" height="300"></canvas>
@@ -163,6 +163,7 @@ function pad(n) {
 
 function startTimer() {
   clearInterval(timer);
+  disableWakeLock();
 
   const startInput = document.getElementById("startTime").value;
   const endInput = document.getElementById("endTime").value;
@@ -194,15 +195,19 @@ function startTimer() {
 function pauseTimer() {
   if (!timer) return;
 
+  const btn = document.getElementById("pauseBtn");
+
   if (!isPaused) {
     clearInterval(timer);
     pausedAt = performance.now();
     isPaused = true;
+    btn.textContent = "▶";
   } else {
     let pauseDuration = performance.now() - pausedAt;
     startedAt += pauseDuration;
     timer = setInterval(update, 16);
     isPaused = false;
+    btn.textContent = "⏸";
   }
 }
 
