@@ -183,6 +183,7 @@ function startTimer() {
   }
 
   startedAt = performance.now();
+  document.getElementById("pauseBtn").textContent = "⏸";
   enableWakeLock();
   pausedAt = 0;
   isPaused = false;
@@ -220,6 +221,8 @@ function resetTimer() {
 
   warned = false;
   ended = false;
+  document.getElementById("pauseBtn").textContent = "⏸";
+  isPaused = false;
   disableWakeLock();
 }
 
