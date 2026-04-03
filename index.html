@@ -135,6 +135,7 @@ let pausedAt = 0;
 let isPaused = false;
 let warned = false;
 let ended = false;
+let audioUnlocked = false;
 
 const canvas = document.getElementById("clockCanvas");
 const ctx = canvas.getContext("2d");
@@ -162,6 +163,7 @@ function pad(n) {
 }
 
 function startTimer() {
+  unlockAudio();
   clearInterval(timer);
   disableWakeLock();
 
@@ -334,6 +336,17 @@ function ringBell() {
 function quickSet(start, end) {
   document.getElementById("startTime").value = start;
   document.getElementById("endTime").value = end;
+}
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+
+  const bell = document.getElementById("bell");
+  bell.play().then(() => {
+    bell.pause();
+    bell.currentTime = 0;
+    audioUnlocked = true;
+  }).catch(() => {});
 }
 
 </script>
