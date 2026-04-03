@@ -128,6 +128,7 @@
 
 <script>
 let timer;
+let wakeLock = null;
 let startMs, endMs, duration;
 let startedAt;
 let pausedAt = 0;
@@ -167,7 +168,7 @@ function startTimer() {
   const endInput = document.getElementById("endTime").value;
 
   if (!startInput || !endInput) {
-    alert("시간 입력해");
+    alert("시간을 입력해 주세요");
     return;
   }
 
@@ -176,11 +177,12 @@ function startTimer() {
   duration = endMs - startMs;
 
   if (duration <= 0) {
-    alert("끝시간이 더 커야함");
+    alert("끝시간이 더 커야합니다");
     return;
   }
 
   startedAt = performance.now();
+  enableWakeLock();
   pausedAt = 0;
   isPaused = false;
   warned = false;
@@ -213,6 +215,7 @@ function resetTimer() {
 
   warned = false;
   ended = false;
+  disableWakeLock();
 }
 
 function update() {
@@ -249,6 +252,26 @@ function update() {
     ringBell();
     ended = true;
     clearInterval(timer);
+    disableWakeLock();
+  }
+}
+  
+async function enableWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log("화면 꺼짐 방지 활성화");
+    }
+  } catch (err) {
+    console.log("WakeLock 실패:", err);
+  }
+}
+
+async function disableWakeLock() {
+  if (wakeLock !== null) {
+    await wakeLock.release();
+    wakeLock = null;
+    console.log("화면 꺼짐 방지 해제");
   }
 }
 
