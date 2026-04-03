@@ -330,7 +330,7 @@ function drawHand(cx, cy, deg, length, width) {
 function ringBell() {
   const bell = document.getElementById("bell");
   bell.currentTime = 0;
-  bell.play();
+  bell.play().catch(() => {});
 }
 
 function quickSet(start, end) {
